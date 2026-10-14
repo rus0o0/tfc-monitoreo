@@ -1,0 +1,31 @@
+# /etc/sudoers.d/telegraf-restart
+# Permite al usuario telegraf-restart ejecutar SOLO estas acciones de systemctl,
+# sin contraseña. Es el usuario con el que el dashboard se conecta por SSH.
+#
+# Instalación (en el cliente):
+#   visudo -f /etc/sudoers.d/telegraf-restart
+#   chmod 440 /etc/sudoers.d/telegraf-restart
+
+Cmnd_Alias TFC_SERVICIOS = \
+    /usr/bin/systemctl start sssd.service, \
+    /usr/bin/systemctl stop sssd.service, \
+    /usr/bin/systemctl restart sssd.service, \
+    /usr/bin/systemctl status sssd.service, \
+    /usr/bin/systemctl start ssh.service, \
+    /usr/bin/systemctl stop ssh.service, \
+    /usr/bin/systemctl restart ssh.service, \
+    /usr/bin/systemctl status ssh.service, \
+    /usr/bin/systemctl start cron.service, \
+    /usr/bin/systemctl stop cron.service, \
+    /usr/bin/systemctl restart cron.service, \
+    /usr/bin/systemctl status cron.service, \
+    /usr/bin/systemctl start ufw.service, \
+    /usr/bin/systemctl stop ufw.service, \
+    /usr/bin/systemctl restart ufw.service, \
+    /usr/bin/systemctl status ufw.service, \
+    /usr/bin/systemctl start telegraf.service, \
+    /usr/bin/systemctl stop telegraf.service, \
+    /usr/bin/systemctl restart telegraf.service, \
+    /usr/bin/systemctl status telegraf.service
+
+telegraf-restart ALL=(root) NOPASSWD: TFC_SERVICIOS

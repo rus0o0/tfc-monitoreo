@@ -1,0 +1,36 @@
+# /etc/telegraf/telegraf.conf (cliente Debian, VLAN 40)
+# Copia este fichero y sustituye los valores entre [CORCHETES].
+
+[agent]
+  interval = "5s"
+  round_interval = true
+  metric_batch_size = 1000
+  metric_buffer_limit = 10000
+  collection_jitter = "0s"
+  flush_interval = "5s"
+  flush_jitter = "0s"
+  precision = "1s"
+  hostname = "[IP_DEL_CLIENTE]"
+
+# Salida: MariaDB (VLAN 20)
+[[outputs.sql]]
+  driver = "mysql"
+  data_source_name = "telegraf:[PASSWORD_TELEGRAF]@tcp(10.0.20.10:3306)/telegraf?sql_mode=ANSI_QUOTES"
+
+# Entradas
+[[inputs.cpu]]
+  percpu = false
+  totalcpu = true
+  fieldinclude = ["usage_user"]
+
+[[inputs.mem]]
+  fieldinclude = ["used_percent"]
+
+[[inputs.systemd_units]]
+  name_override = "servizos_criticos"
+  [inputs.systemd_units.tagpass]
+    name = ["sssd.service", "ssh.service", "cron.service", "ufw.service", "telegraf.service"]
+
+# Solo si el nodo ejecuta Apache con mod_status activo
+# [[inputs.apache]]
+#   urls = ["http://localhost/server-status?auto"]
